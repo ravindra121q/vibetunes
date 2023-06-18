@@ -123,16 +123,19 @@ userRouter.post("/add/song/playlist/:id", async (req, res) => {
 });
 
 userRouter.get("/allSongs", async (req, res) => {
-  const token = jwt.verify(
-    req.headers.authorization.split(" ")[1],
-    process.env.JWT_SECRET_KEY
-  );
-  if (!token) {
-    res.status(200).send("Please login first");
-  }
-  if (token) {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    if (!decodedToken) {
+      return res.status(401).send("Please login first");
+    }
+
     const allSongs = await SongsModel.find();
     res.status(200).send(allSongs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
