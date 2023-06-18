@@ -130,7 +130,7 @@ userRouter.get("/allSongs", async (req, res) => {
   if (!token) {
     res.status(200).send("Please login first");
   }
-  if (token.isAdmin) {
+  if (token) {
     const allSongs = await SongsModel.find();
     res.status(200).send(allSongs);
   }
