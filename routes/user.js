@@ -157,6 +157,21 @@ userRouter.get("/user/allSongs", authenticator, async (req, res) => {
     res.status(200).send("Please login first");
   }
 });
+userRouter.delete("/admin/allSongs/:id", async (req, res) => {
+  const { id } = req.params;
+  const decoded = jwt.verify(
+    req.headers.authorization.split(" ")[1],
+    process.env.JWT_SECRET_KEY
+  );
+
+  const user = await User.findOne({ _id: decoded.userId });
+  if (!user.isAdmin) {
+    return res.status(200).send("Please login as admin");
+  } else {
+    await SongsModel.findByIdAndDelete({ _id: id });
+    return res.status(200).send("Song deleted Successfully");
+  }
+});
 
 userRouter.delete("/user/allSongs/:id", authenticator, async (req, res) => {
   const { id } = req.params;
