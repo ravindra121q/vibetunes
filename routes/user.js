@@ -132,7 +132,7 @@ userRouter.get("/allSongs", async (req, res) => {
     }
 
     const allSongs = await SongsModel.find();
-    res.status(200).send(allSongs);
+    res.status(200).json({ songs: allSongs });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
