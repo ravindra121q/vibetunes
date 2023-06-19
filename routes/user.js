@@ -78,21 +78,21 @@ userRouter.post("/admin/add/allSongs", authenticator, async (req, res) => {
   if (!name || !url || !artist) {
     return res.send({ msg: "Please fill all the fields" });
   }
-  const song_exists = await SongsModel.findOne({ name: name });
-  if (song_exists) {
-    return res.status(200).json({ msg: "Song already exists" });
-  } else {
-    const song = new SongsModel({
-      name,
-      url,
-      artist,
-      image_url,
-      userId: decoded.userId,
-    });
-    await song.save();
-    res.status(200).json({ msg: "Song is Added Successfully" });
-    return;
-  }
+  // const song_exists = await SongsModel.findOne({ name: name });
+  // if (song_exists) {
+  //   return res.status(200).json({ msg: "Song already exists" });
+  // } else {
+  const song = new SongsModel({
+    name,
+    url,
+    artist,
+    image_url,
+    userId: decoded.userId,
+  });
+  await song.save();
+  res.status(200).json({ msg: "Song is Added Successfully" });
+  return;
+  // }
 });
 
 userRouter.post("/add/song/playlist/:id", async (req, res) => {
