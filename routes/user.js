@@ -64,7 +64,7 @@ userRouter.post("/login", async (req, res) => {
 });
 
 userRouter.post("/admin/add/allSongs", authenticator, async (req, res) => {
-  const { name, url, artist,image_url } = req.body;
+  const { name, url, artist, image_url } = req.body;
   const decoded = jwt.verify(
     req.headers.authorization.split(" ")[1],
     process.env.JWT_SECRET_KEY
@@ -78,11 +78,17 @@ userRouter.post("/admin/add/allSongs", authenticator, async (req, res) => {
   if (!name || !url || !artist) {
     return res.send({ msg: "Please fill all the fields" });
   }
-  const song_exists = await SongsModel.findOne({ name });
+  const song_exists = await SongsModel.findOne({ name: name });
   if (song_exists) {
     return res.status(200).json({ msg: "Song already exists" });
   } else {
-    const song = new SongsModel({ name, url, artist, userId: decoded.userId });
+    const song = new SongsModel({
+      name,
+      url,
+      artist,
+      image_url,
+      userId: decoded.userId,
+    });
     await song.save();
     res.status(200).json({ msg: "Song is Added Successfully" });
     return;
